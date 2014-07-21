@@ -8,9 +8,9 @@ public class Test
 							.fieldType(Integer.class).named("size")
 							.fieldType(String.class).named("name");
 		
-		InstanceFactory.makeType("dillo", cb, IAnimal.class);
+		InstanceFactory.makeType("Dillo", cb, IAnimal.class);
 		
-		IAnimal test = InstanceFactory.instantiate("testType");
+		IAnimal test = InstanceFactory.instantiate("Dillo");
 		
 		System.out.println(test.getClass().getName());
 	}
