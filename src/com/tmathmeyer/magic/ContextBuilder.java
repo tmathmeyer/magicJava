@@ -1,21 +1,29 @@
 package com.tmathmeyer.magic;
 
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public abstract class ContextBuilder implements Iterable<Entry<String, Class<?>>>
 {
-	static class BuilderStateA extends ContextBuilder
+	public static class BuilderStateA extends ContextBuilder
 	{
-		private Map<String, Class<?>> context;
+		private SortedMap<String, Class<?>> context;
 		public BuilderStateA()
 		{
-			context = new HashMap<>();
+			context = new TreeMap<>(new Comparator<String>() {
+
+				@Override
+				public int compare(String o1, String o2) {
+					return o1.compareTo(o2);
+				}
+				
+			});
 		}
 		
-		public BuilderStateA(Map<String, Class<?>> newcontext, String s, Class<?> clazz)
+		public BuilderStateA(SortedMap<String, Class<?>> newcontext, String s, Class<?> clazz)
 		{
 			context = newcontext;
 			context.put(s, clazz);
@@ -31,14 +39,20 @@ public abstract class ContextBuilder implements Iterable<Entry<String, Class<?>>
 		{
 			return context.entrySet().iterator();
 		}
+		
+		@Override
+		public int getSize()
+		{
+			return context.size();
+		}
 	}
 	
-	static class BuilderStateB<T> extends ContextBuilder
+	public static class BuilderStateB<T> extends ContextBuilder
 	{
-		private Map<String, Class<?>> context;
+		private SortedMap<String, Class<?>> context;
 		private final Class<T> clazz;
 		
-		public BuilderStateB(Map<String, Class<?>> newcontext, Class<T> clazz)
+		public BuilderStateB(SortedMap<String, Class<?>> newcontext, Class<T> clazz)
 		{
 			context = newcontext;
 			this.clazz = clazz;
@@ -54,6 +68,12 @@ public abstract class ContextBuilder implements Iterable<Entry<String, Class<?>>
 		{
 			return context.entrySet().iterator();
 		}
+
+		@Override
+		public int getSize()
+		{
+			return context.size();
+		}
 	}
 	
 	
@@ -62,4 +82,6 @@ public abstract class ContextBuilder implements Iterable<Entry<String, Class<?>>
 	{
 		return new BuilderStateA();
 	}
+
+	public abstract int getSize();
 }
