@@ -3,6 +3,7 @@ package com.tmathmeyer.magic;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javassist.CannotCompileException;
 import javassist.NotFoundException;
@@ -11,22 +12,22 @@ public class InstanceFactory
 {
 	private static Map<String, Pair<Class<?>, Class<?>>> generatedClasses = new HashMap<>();
 	
-	public static <T> boolean makeType (String classname, String packageName, ContextBuilder typeContext, Class<T> superinterface)
+	public static <T> Class<T> makeType (String classname, String packageName, ContextBuilder typeContext, Class<T> superinterface)
 	{
 		try
 		{
 			Class<T> newtype = ClassBuilder.generate(classname, packageName, typeContext, superinterface);
 			generatedClasses.put(classname, new Pair<Class<?>, Class<?>>(newtype, superinterface));
-			return true;
+			return newtype;
 		}
 		catch (NotFoundException | CannotCompileException e)
 		{
 			e.printStackTrace();
-			return false;
+			return null;
 		}
 	}
 	
-	public static <T> boolean makeType (String classname, ContextBuilder typeContext, Class<T> superinterface)
+	public static <T> Class<T> makeType (String classname, ContextBuilder typeContext, Class<T> superinterface)
 	{
 		return makeType(classname, null, typeContext, superinterface);
 	}
@@ -43,4 +44,14 @@ public class InstanceFactory
 		return result;
 	}
 	
+	
+	public static Class<?> getClassByName(String name)
+	{
+		return generatedClasses.get(name).getA();
+	}
+	
+	public static Set<String> getDefinedClasses()
+	{
+		return generatedClasses.keySet();
+	}
 }

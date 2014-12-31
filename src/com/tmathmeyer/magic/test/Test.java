@@ -19,13 +19,10 @@ public class Test
 		InstanceFactory.makeType("Dillo", "com.tmathmeyer.magic.test", cb, Model.class);
 		
 		Runtime test = InstanceFactory.instantiate("Dillo", ab);
-		Runtime real = new Dillo("tommy", 7);
 		
 		System.out.println(test.get("name", String.class));
-		System.out.println(real.get("name", String.class));
 		
 		System.out.println(test.getClass().getName());
-		System.out.println(real.getClass().getName());
 	}
 	
 	public static interface Model
